@@ -4,29 +4,31 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        nums.sort()
+        """
+        a + b + c = 0 => b + c = -a
+        so we can loop in each of array then get b + c = -a
+        """
+        numbers.sort()
         output = []
-        
-        for i in range(len(nums)):
-            if i > 0 and nums[i] == nums[i-1]:
+        for i in range(len(numbers)):
+            if i > 0 and numbers[i] == numbers[i - 1]:
                 continue
-                
-            l = i + 1
-            r = len(nums) - 1
-            
-            while l < r:
-                if nums[i] + nums[l] + nums[r] == 0:
-                    output.append([nums[i], nums[l], nums[r]])
-                    while l < r and nums[l] == nums[l+1]:
-                        l = l + 1
-                    while l < r and nums[r] == nums[r-1]:
-                        r = r - 1
-                        
-                    l = l + 1
-                    r = r - 1
-                elif nums[i] + nums[l] + nums[r] > 0:
-                    r = r - 1
-                else:
-                    l = l + 1
-                
+
+            self.findTwoSum(numbers, i + 1, len(numbers) - 1, -numbers[i], output)
+
         return output
+
+    def findTwoSum(self, numbers, left, right, target, output):
+        lastPair = (None, None)
+        while left < right:
+            if numbers[left] + numbers[right] == target:
+                if (numbers[left], numbers[right]) != lastPair:
+                    output.append([-target, numbers[left], numbers[right]])
+
+                lastPair = (numbers[left], numbers[right])
+                left = left + 1
+                right = right - 1
+            elif numbers[left] + numbers[right] > target:
+                right = right - 1
+            else:
+                left = left + 1
